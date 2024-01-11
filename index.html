@@ -1,0 +1,414 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		<title>Numerical Time Integration</title>
+		<link rel="stylesheet" href="dist/reset.css">
+		<link rel="stylesheet" href="dist/reveal.css">
+		<link rel="stylesheet" href="dist/theme/black.css">
+		<link rel="stylesheet" href="plugin/highlight/monokai.css">
+		<link rel="stylesheet" href="index.css">
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<section>
+					<h1 class="wide-h1">Numerical Time Integration</h1>
+					<!-- <div style="width: 125%; transform: translateX(-10%);height: 1px; background-color: #ff4a5d;"></div> -->
+					<!-- <div style="width: 125%; transform: translateX(-10%);height: 1px; background-color: #fdb059;"></div> -->
+					<!-- <div style="width: 125%; transform: translateX(-10%);height: 1px; background-color: #ffd6a5;"></div> -->
+					<!-- <div style="width: 125%; transform: translateX(-10%);height: 1px; background-color: #fdffb6;"></div> -->
+					<!-- <div style="width: 125%; transform: translateX(-10%);height: 1px; background-color: #9bf6ff;"></div> -->
+					<!-- <div style="width: 125%; transform: translateX(-10%);height: 1px; background-color: #5cb8ff;"></div> -->
+					<!-- <div style="width: 125%; transform: translateX(-10%);height: 1px; background-color: #9191fd;"></div> -->
+					<!-- <div style="width: 125%; transform: translateX(-10%);height: 1px; background-color: #de58ff;"></div> -->
+					<!-- <div style="width: 125%; transform: translateX(-10%);height: 1px; background-color: #ffc6ff;"></div> -->
+					<!-- <br/> -->
+					<h4>Seminar: Advanced Topics in Animation</h4>
+					<h4>Julian Karrer</h4>
+				</section>
+				
+
+				<!-- LANDSCAPE  -->
+				<section data-auto-animate data-auto-animate-restart>
+					<h4 class="r-fit-text" data-id="header">The Landscape of Integration Methods</h4>
+					<canvas id="landscape" style="width:100%"width="1300" height="800" onclick="()=>{}"></canvas>
+				</section>
+
+
+				<!-- TAYLOR SERIES  -->
+				<section  data-auto-animate data-auto-animate-restart>
+					<h4 class="r-fit-text" data-id="header">What is a Taylor expansion?</h4>
+					<canvas id="taylor" width="1000" height="500" onclick="()=>{}"></canvas>
+					<div data-id="taylorseries">
+						<span class="math">\[f(x)\approx f(0) + \frac{f'(0)}{1!}x + \frac{f''(0)}{2!}x^2  + \frac{f'''(0)}{3!}x^3 + \dots\]</span>
+					</div>
+				</section>
+				<section  data-auto-animate>
+					<h4 class="r-fit-text" data-id="header">Taylor Series: Implicit Assumptions</h4>
+					<ul>
+						<li>Taylor series is a power series $f(x)\approx \sum_{n=0}^\infty a_n x^n$</li>
+						<li class="fragment">Unlike the Fourier Series, it fails at discontinuities</li>
+						<li class="fragment">n-th order Taylor approximation assumes $C_n$ continuity</li>
+					</ul>
+					<div data-id="taylorseries">
+						<span class="math permaglow">\[f(x)\approx f(0) + \frac{f'(0)}{1!}x + \frac{f''(0)}{2!}x^2  + \frac{f'''(0)}{3!}x^3 + \dots\]</span>
+					</div>
+				</section>
+				<section  data-auto-animate>
+					<h4 class="r-fit-text" data-id="header">Taylor Series: approximating positions</h4>
+					<div data-id="taylorseries">
+						<span class="math fragment custom glow">\[f(x)\approx f(0) + \frac{f'(0)}{1!}x + \frac{f''(0)}{2!}x^2  + \frac{f'''(0)}{3!}x^3 + \dots\]</span>
+					</div>
+					<div data-id="taylorpos">
+						Plug in $\boldsymbol{x}({t+h})$ as a function $f$: 
+						<span class="math fragment custom glowfadein">\[\boldsymbol{x}({t+h})\approx \boldsymbol{x}(t) + h \frac{d\boldsymbol{x}(t)}{dt} + \frac{h^2}{2}\frac{d^2\boldsymbol{x}(t)}{dt^2}  + \frac{h^3}{6}\frac{d^3\boldsymbol{x}(t)}{dt^3} + \mathcal{O}(h^4)\]</span>
+						<span class="math fragment custom glowfadein">or in other notation: \[\boldsymbol{x}^{t+h}\approx \boldsymbol{x}^t + h \boldsymbol{v}^t + \frac{h^2}{2}\boldsymbol{a}^t  + \frac{h^3}{6}\frac{d^3\boldsymbol{x}(t)}{dt^3} + \mathcal{O}(h^4)\]</span>
+						<span class="fragment r-fit-text">$\Longrightarrow$ more information/points → higher order derivatives → higher accuracy</span><br/>
+					</div>
+				</section>
+
+
+				<!-- EULER METHODS AND EXPLICIT METHODS  -->
+				<section  data-auto-animate data-auto-animate-restart>
+					<h4 class="r-fit-text" data-id="header">The simplest case: Euler methods</h4>
+					<div style="display: flex;">
+						<div style="flex-direction: column; display: flex; align-items: center; justify-content: center;">
+							<span class="r-fit-text">First order approximations:</span>
+							<div class="fragment custom glow">
+								<span class="math">\[\boldsymbol{x}^{t+h}\approx \boldsymbol{x}^t + h \boldsymbol{v}^t + \mathcal{O}(h^2)\]</span>
+								<span class="hint" style="color: #ff4a5d">Explicit Euler, Forward Euler, Forward Difference</span>
+							</div>
+							<div class="fragment custom glow">
+								<span class="math">\[\boldsymbol{x}^{t+h}\approx \boldsymbol{x}^t + h\boldsymbol{v}^{t+h} + \mathcal{O}(h^2)\]</span>
+								<span class="hint" style="color: #c1ff9a">Implicit Euler, Backward Euler, Backward Difference</span>
+							</div>
+						</div>
+						<div class="fragment"></div>
+						<canvas id="eulermethod" style="width: 60vh; height: 60vh; margin: 5vh;"width="600" height="600"></canvas>
+					</div>
+				</section>
+				<!-- VERLET DERIVATION -->
+				<section data-auto-animate>
+					<h4 class="r-fit-text" data-id="header">Making Explicit Euler more accurate: Verlet</h4>
+					<ul>
+						<li>higher order approxiamtion = more accuracy</li>
+						<li>only 2nd derivative is known at $\boldsymbol{x}^{t}$</li>
+						<li>idea: consider previous points $\boldsymbol{x}^{t-h}, \boldsymbol{x}^{t-2h}, \dots$</li>
+					</ul>
+					<div data-id="verletderivation" class="fragment math">
+						\[\begin{align*}
+						\boldsymbol{x}^{t+h}&\approx \boldsymbol{x}^t &+ h \boldsymbol{v}^t &+ \frac{h^2}{2}\boldsymbol{a}^t  &+ \frac{h^3}{6}\frac{d^3\boldsymbol{x}(t)}{dt^3} &+ \mathcal{O}(h^4)\\
+						\boldsymbol{x}^{t-h}&\approx \boldsymbol{x}^t &- h \boldsymbol{v}^t &+ \frac{h^2}{2}\boldsymbol{a}^t  &- \frac{h^3}{6}\frac{d^3\boldsymbol{x}(t)}{dt^3} &+ \mathcal{O}(h^4)\\
+						\end{align*}
+						\]
+					</div>
+				</section>
+				<section data-auto-animate>
+					<h4 class="r-fit-text" data-id="header">Making Explicit Euler more accurate: Verlet</h4>
+					<div data-id="verletderivation" class="math">
+						\[\begin{align*}
+						\boldsymbol{x}^{t+h}&\approx \boldsymbol{x}^t &+ h \boldsymbol{v}^t &+ \frac{h^2}{2}\boldsymbol{a}^t  &+ \frac{h^3}{6}\frac{d^3\boldsymbol{x}(t)}{dt^3} &+ \mathcal{O}(h^4)\\
+						\boldsymbol{x}^{t-h}&\approx \boldsymbol{x}^t &- h \boldsymbol{v}^t &+ \frac{h^2}{2}\boldsymbol{a}^t  &- \frac{h^3}{6}\frac{d^3\boldsymbol{x}(t)}{dt^3} &+ \mathcal{O}(h^4)\\
+						\boldsymbol{x}^{t+h} + \boldsymbol{x}^{t-h}&\approx 2 \boldsymbol{x}^t &&+ h^2\boldsymbol{a}^t &&+ \mathcal{O}(h^4)\\
+						\end{align*}
+						\]
+					</div>
+					<div class="fragment custom glowfadein" data-id="verlet-definition">
+						<span class="math">\[\boldsymbol{x}^{t+h} \approx  2 \boldsymbol{x}^t - \boldsymbol{x}^{t-h} + h^2\boldsymbol{a}^t + \mathcal{O}(h^4)\]</span>
+						<span class="hint" style="color: #5cb8ff">Verlet</span>
+					</div>
+					<span class="fragment">directly solves 2nd order ODE without using $\boldsymbol{v}^t$ </span>
+				</section>
+				<!-- EXPLICIT LINEAR MULTISTEP VERLET DERIVATION -->
+				<section data-auto-animate>
+					<h4 class="r-fit-text" data-id="header">explicit linear multistep methods</h4>
+					<span class="r-fit-text">linear multistep methods $\Longleftrightarrow$ linear combination of values at previous points</span>
+					<div data-id="verlet-definition">
+						<span class="math">\[\boldsymbol{x}^{t+h} \approx 2 \boldsymbol{x}^t -\boldsymbol{x}^{t-h}  + h^2\boldsymbol{a}^t + \mathcal{O}(h^4)\]</span>
+						<span class="hint" style="color: #5cb8ff">Verlet</span>
+					</div>
+					<div class="fragment fade-in" style="margin-bottom: -30px;">
+						<span class="math">\[\boldsymbol{x}^{t+h} \approx 
+							\boldsymbol{x}^{t} + \frac{h}{2}\left( 3\boldsymbol{v}^{t} - \boldsymbol{v}^{t-h} \right)
+							+ \mathcal{O}(h^3)\]</span>
+						<span class="hint" style="color: #ff5960">2nd Order Adams–Bashforth</span>
+					</div>
+					<div class="fragment fade-in" style="margin-bottom: -30px;">
+						<span class="math">\[\boldsymbol{x}^{t+h} \approx 
+							\boldsymbol{x}^{t} + \frac{h}{12}\left( 23\boldsymbol{v}^{t} -16\boldsymbol{v}^{t-h} +5\boldsymbol{v}^{t-2h}\right)
+							+ \mathcal{O}(h^4)\]</span>
+						<span class="hint" style="color: #ff6762">3rd Order Adams–Bashforth</span>
+					</div>
+					<div class="fragment fade-in" style="margin-bottom: -30px;">
+						<span class="math">\[\boldsymbol{x}^{t+h} \approx 
+							\boldsymbol{x}^{t} + \frac{h}{24}\left( 55\boldsymbol{v}^{t} -59\boldsymbol{v}^{t-h} +37\boldsymbol{v}^{t-2h} -9\boldsymbol{v}^{t-3h}\right)
+							+ \mathcal{O}(h^5)\]</span>
+						<span class="hint" style="color: #ff8366">4th Order Adams–Bashforth</span>
+					</div>
+					<span class="fragment fade-in" style="top: -20px;position: relative;">\[\dots\]</span>
+				</section>
+				<!-- VERLET INITIALIZATION -->
+				<section data-auto-animate>
+					<h4 class="r-fit-text" data-id="header">Initialization and Accuracy</h4>
+					<div class="side-by-side" style="font-size: 20px; position: absolute; width: 100%">
+						<span style="color: 	#ff4a5d">Explicit Euler</span>
+						<span style="color: 	#ae81ae">Verlet with $\mathcal{O}(h^2)$ initialization</span>
+						<span style="color: 	#5cb8ff">Verlet with $\mathcal{O}(h^3)$ initialization</span>
+					</div>
+					<div style="position: absolute; bottom: 100px; left: 50%; transform: translateX(-50%); z-index: 2;">
+						<input type="range" id="verlet-init-dt" name="Δt" min="15" max="150" value="15"/>
+						<label id="verlet-init-dt-label" for="verlet-init-dt">Δt</label>
+					</div>
+					<canvas id="planets1" width="700" height="700" style="top: -60px; position: relative;" onclick="()=>{}"></canvas>
+				</section>
+				<!-- RUNGE KUTTA -->
+				<section data-auto-animate>
+					<h4 class="r-fit-text" data-id="header">improving accuracy: Runge Kutta Methods</h4>
+					<ul>
+						<li><span>linear multistep: use previous timesteps $\approx$ higher order terms</span></li>
+						<li><span>new idea: take intermediary steps</span></li>
+					</ul>
+					<div style="display: flex; top:-20px; position: relative;" class="fragment custom glowfadein">
+						<div style="flex-direction: column; display: flex; align-items: center; justify-content: center;">
+							<!-- <span class="r-fit-text">Explicit Midpoint (2nd order Runge Kutta):</span> -->
+							<div >
+								<span class="math">\[\boldsymbol{x}^{t+h}\approx \boldsymbol{x}^t + h\boldsymbol{v}^{t+h} + \mathcal{O}(h^2)\]</span>
+								<span class="hint" style="color: #ffc6ff">Explicit Midpoint, 2nd Order Runge Kutta, RK2</span>
+							</div>
+						</div>
+						<canvas id="rk2" style="width: 60vh; height: 60vh; margin: 5vh;"width="600" height="600"></canvas>
+					</div>
+					<div class="fragment"></div>
+				</section>
+				<!-- BACK TO THE LANDSCAPE -->
+				<section data-auto-animate data-auto-animate-restart>
+					<h4 class="r-fit-text" data-id="header">The Landscape of Integration Methods</h4>
+					<canvas id="landscape2" style="width:100%"width="1300" height="800" onclick="()=>{}"></canvas>
+				</section>
+
+
+
+
+
+
+
+
+
+
+				<!-- EULER METHODS AND IMPLICIT METHODS  -->
+				<section  data-auto-animate data-auto-animate-restart>
+					<h4 class="r-fit-text" data-id="header">The simplest case: Euler methods</h4>
+					<div style="display: flex;">
+						<div style="flex-direction: column; display: flex; align-items: center; justify-content: center;">
+							<span class="r-fit-text">First order approximations:</span>
+							<div>
+								<span class="math">\[\boldsymbol{x}^{t+h}\approx \boldsymbol{x}^t + h \boldsymbol{v}^t + \mathcal{O}(h^2)\]</span>
+								<span class="hint" style="color: #ff4a5d">Explicit Euler, Forward Euler, Forward Difference</span>
+							</div>
+							<div>
+								<span class="math">\[\boldsymbol{x}^{t+h}\approx \boldsymbol{x}^t + h\boldsymbol{v}^{t+h} + \mathcal{O}(h^2)\]</span>
+								<span class="hint" style="color: #c1ff9a">Implicit Euler, Backward Euler, Backward Difference</span>
+							</div>
+						</div>
+						<canvas id="eulermethod2" style="width: 60vh; height: 60vh; margin: 5vh;"width="600" height="600"></canvas>
+					</div>
+				</section>
+				<section  data-auto-animate>
+					<h4 class="r-fit-text" data-id="header">the problem with implicit methods</h4>
+					<ul>
+						<li>if $\boldsymbol{v}$ is only a function in time, things are not interacting</li>
+						<li>usually, $\boldsymbol{v}$ and $\boldsymbol{a}$ are functions of position $\boldsymbol{x}(t)$</li>
+						<li class="fragment" data-id="eq">$\boldsymbol{x}({t+h})$ on both sides: 
+							<div data-id="eq">\[\color{red}\boldsymbol{x}({t+h})\color{white} \approx \boldsymbol{x}(t) + h\boldsymbol{v}(\color{red}\boldsymbol{x}({t+h})\color{white})\]</div>
+						</li>
+						<li class="fragment custom glowfadein">implicit methods generally yield a non-linear equation we need to solve </li>
+					</ul>
+				</section>
+				<section data-auto-animate>
+					<h4 class="r-fit-text" data-id="header">Implicit Methods - solving the equation</h4>
+					<div data-id="eq">\[\boldsymbol{x}^{t+h} = \boldsymbol{x}^t + h\boldsymbol{v}(\boldsymbol{x}^{t+h})\]</div>
+					<span class="fragment custom glowfadein">$\Longrightarrow$ Newton-Rhapson methods: 
+						\[0 = \boldsymbol{x}^t + h\boldsymbol{v}(\boldsymbol{x}^{t+h}) - \boldsymbol{x}^{t+h}\]</span>
+					<span class="fragment custom glowfadein">$\Longrightarrow$ Linearization with Jacobian: 
+							\[\boldsymbol{x}^{t+h} = \boldsymbol{x}(t) + h\left( \boldsymbol{v}^t + \boldsymbol{J}^t h \boldsymbol{x}^{t+h} \right)\]</span>
+					<ul>
+						<li class="fragment">more work: solve an equation for each timestep</li>
+						<li class="fragment">more error: linearization and solver inaccuracy</li>
+						<li class="fragment">BUT: they can be unconditionally stable and handle stiff problems</li>
+					</ul>
+				</section>
+
+				<!-- WHAT IS STABILITY -->
+				<section  data-auto-animate data-auto-animate-restart>
+					<h4 class="r-fit-text" data-id="header">What are stability and accuracy?</h4>
+					<h4></h4>
+					<script>
+					const error_show_functions = new Map([
+						["error-button-ee",true],
+						["error-button-se",true],
+						["error-button-ve",false],
+						["error-button-rk",false],
+					]);
+					let renderErrorOrder = ()=>{}
+					function set_me(b){
+						if (document.getElementById(b.id).classList.contains("halfop")){
+							document.getElementById(b.id).classList.remove("halfop")
+						} else {
+							document.getElementById(b.id).classList.add("halfop")
+						}
+						let is = error_show_functions.get(b.id);
+						error_show_functions.set(b.id, !is)
+						renderErrorOrder()
+						return false;
+					}</script>
+					<div class="side-by-side" style="font-size: 20px;">
+						<a id="error-button-ee" onclick="set_me(this);" style="color:#ff4a5d; cursor: pointer;">Explicit Euler</a>
+						<a id="error-button-se" onclick="set_me(this);" style="color:#fdb059; cursor: pointer;">Semi-Implicit Euler</a>
+						<a id="error-button-ve" onclick="set_me(this);" style="color:#5cb8ff; cursor: pointer;" class="halfop">Verlet</a>
+						<a id="error-button-rk" onclick="set_me(this);" style="color:#de58ff; cursor: pointer;" class="halfop">4th Order Runge Kutta</a>
+					</div><br/>
+						<div class="side-by-side swap-graphs" id="error-graphs">
+							<canvas id="error-order" 			width="1000" height="400"></canvas>
+							<canvas id="error-magnitude" 	width="1000" height="400"></canvas>
+						</div>
+						<div class="side-by-side">
+							<div class="vertical">
+								<input type="range" id="error-order-dt" name="Δt" min="10" max="1000" value="800"/>
+								<label id="error-order-dt-label" for="error-order-dt">Δt</label>
+							</div>
+							<div class="vertical">
+								<input type="range" id="error-order-domain" name="Domain" min="10" max="100" value="10"/>
+								<label id="error-order-domain-label" for="error-order-domain">Domain</label>
+							</div>
+							<div class="vertical">
+								<label class="container">
+									<input type="checkbox" id="error-show-integral">
+									<span class="checkmark"></span><br/><br/>
+									Show Error
+								</label>
+							</div>
+							<div class="vertical">
+								<label class="container">
+									<input type="checkbox" id="error-logscale">
+									<span class="checkmark"></span><br/><br/>
+									Logscale
+								</label>
+							</div>
+							<div class="vertical">
+								<label class="container">
+									<input type="checkbox" id="error-big-dt">
+									<span class="checkmark"></span><br/><br/>
+									Δt>>f
+								</label>
+							</div>
+						</div>
+						<div class="fragment"></div>
+					</section>
+
+					
+				<!-- STIFFNESS  -->
+				<section data-auto-animate data-auto-animate-restart>
+					<h4 class="r-fit-text" data-id="header">The core problem - stiffness and stability</h4><br/>
+					<br/>
+					<div class="quote">
+						<span class="definition"> Definition </span>
+						« If a numerical method [...] is forced to use in a certain interval of integration a step length
+						which is excessively small in relation to the smoothness of the exact solution in that
+						interval »
+					</div>
+					<br/>
+						<ul>
+							<li class="fragment">stiff problem = timestep is limited by stability, not accuracy</li>
+							<li class="fragment">→ low variation and high smoothness, but small timestep required</li>
+							<!-- <li class="fragment">hard to mathematically define → "phenomenon"</li> -->
+							<li class="fragment">frequently a problem for decaying functions: $e^{kx}$ for $k<0$</li>
+						</ul>
+				</section>
+				<section data-auto-animate>
+					<h4 class="r-fit-text" data-id="header">the archetypical stiff problem: A-stability</h4><br/>
+					<span data-id="a_stable_exp">$v^t = -kx^t$</span><br/>
+					<span data-id="a_stable_exp2">$x^t = e^{-kt}$</span><br/>
+					<ul>
+						<li>smooth and has low variation</li>
+						<li>still, instabilities occur → stiff problem!</li>
+						<li class="fragment custom glowfadein">a method is A-stable if it can deal with this problem:  \[x^t \rightarrow 0 \text{ as } t \rightarrow \infty \]</li>
+					</ul>
+				</section>
+				<section data-auto-animate>
+					<h4 class="r-fit-text" data-id="header">the stiff test problem: A-stability</h4><br/>
+					<div class="side-by-side" style="font-size: 20px;">
+						<a style="color:#ff4a5d; cursor: pointer;">Explicit Euler</a>
+						<a style="color:#c1ff9a; cursor: pointer;">Implicit Euler</a>
+						<a style="color:#f3e22e; cursor: pointer;">Trapezoidal Rule</a>
+					</div><br/>
+					<canvas id="stiffness" 			width="1000" height="400"></canvas>
+					<span data-id="a_stable_exp">$v^t = -kx^t$</span>
+					<div class="side-by-side">
+						<div class="vertical">
+							<input type="range" id="stiff-dt" name="Δt" min="200" max="800" value="200"/>
+							<label id="stiff-dt-label" for="stiff-dt">Δt</label>
+						</div>
+						<div class="vertical">
+							<input type="range" id="stiffness-k" name="k" min="1" max="100" value="5"/>
+							<label id="stiffness-k-label" for="stiffness-k">k</label>
+						</div>
+					</div>
+				</section>
+
+
+
+
+
+
+
+				
+
+
+			</div>
+		</div>
+		<script src="p5.min.js"></script>
+		<script src="dist/reveal.js"></script>
+		<script src="plugin/notes/notes.js"></script>
+		<script src="plugin/markdown/markdown.js"></script>
+		<script src="plugin/highlight/highlight.js"></script>
+		<script src="plugin/math/math.js"></script>
+		<script src="plugin/zoom/zoom.js"></script>
+		<script>
+			Reveal.initialize({
+				// auto animations
+				autoAnimateEasing: 'ease-out',
+  			autoAnimateDuration: 0.5,
+				autoAnimateUnmatched: false,
+				// general settings
+				hash: true, 
+				controlsTutorial: false,
+				controlsBackArrows: 'faded',
+				slideNumber: false,  
+				history: true,
+				transition: 'slide', // none/fade/slide/convex/concave/zoom
+				// katex settings
+				katex: {
+					version: 'latest',
+					delimiters: [
+						{left: '$$', right: '$$', display: true},
+						{left: '$', right: '$', display: false},
+						{left: '\\(', right: '\\)', display: false},
+						{left: '\\[', right: '\\]', display: true}
+					],
+					ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+				},
+				// plugins used
+				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes, RevealMath.KaTeX ]
+			});
+		</script>
+		<script src="plot_errors.js"></script>
+		<script src="landscape.js"></script>
+		<script src="plot_planets.js"></script>
+		<script src="taylor.js"></script>
+		<script src="eulermethod.js"></script>
+		<script src="rk2.js"></script>
+		<script src="stiffness.js"></script>
+	</body>
+</html>

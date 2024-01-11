@@ -1,0 +1,181 @@
+:root {
+  --r-background-color: #191919;
+  --r-main-font: Quicksand, Source Sans Pro, Helvetica, sans-serif;
+  --r-main-font-size: 30px;
+  --r-main-color: #fff;
+  --r-block-margin: 20px;
+  --r-heading-margin: 0 0 20px 0;
+  --r-heading-font: Quicksand, Source Sans Pro, Helvetica, sans-serif;
+  --r-heading-color: #fff;
+  --r-heading-line-height: 1.2;
+  --r-heading-letter-spacing: normal;
+  --r-heading-text-transform: uppercase;
+  --r-heading-text-shadow: none;
+  --r-heading-font-weight: 600;
+  --r-heading1-text-shadow: none;
+  --r-heading1-size: 5vw;
+  --r-heading2-size: 1.6em;
+  --r-heading3-size: 1.3em;
+  --r-heading4-size: 2vw;
+  --r-code-font: monospace;
+  --r-link-color: #c8c8c8;
+  --r-link-color-dark: #919191;
+  --r-link-color-hover: #ededed;
+  --r-selection-background-color: rgba(61, 61, 61, 0.75);
+  --r-selection-color: #fff;
+  /* custom */
+  --r-quote-color: #ffffff66;
+}
+
+.wide-h1{
+  width: 200%;
+  transform: translateX(-25%);
+}
+
+@font-face {
+  font-family: 'Quicksand';
+  src: url('./fonts/Quicksand-VariableFont_wght.ttf');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Roboto';
+  src: url('./fonts/RobotoMono-VariableFont_wght.ttf');
+  font-weight: normal;
+  font-style: normal;
+}
+label{
+  font-family: Roboto;
+  font-size: 20px;
+}
+
+.vertical{
+  display: flex;
+  flex-direction: column;  
+  justify-content: center;
+}
+
+.side-by-side{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.swap-graphs{
+  transition: all 500ms;
+  width: 3000px;
+}
+
+.swapped{
+  transform: translateX(-2000px);
+}
+
+                        /* custom checkmark box */
+ /* Customize the label (the container) */
+ .container {
+  display: block;
+  position: relative;
+  padding-left: 35px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  font-size: 22px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Hide the browser's default checkbox */
+.container input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+/* Create a custom checkbox */
+.checkmark {
+  position: absolute;
+  top: 25%;
+  left: 50%;
+  height: 25px;
+  width: 25px;
+  background-color: #eee;
+}
+
+/* On mouse-over, add a grey background color */
+.container:hover input ~ .checkmark {
+  background-color: #ccc;
+}
+
+/* When the checkbox is checked, add a blue background */
+.container input:checked ~ .checkmark {
+  background-color: #2196F3;
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+/* Show the checkmark when checked */
+.container input:checked ~ .checkmark:after {
+  display: block;
+}
+
+/* Style the checkmark/indicator */
+.container .checkmark:after {
+  left: 9px;
+  top: 5px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+} 
+
+.halfop{
+  opacity: 0.5;
+}
+
+.math {
+  font-size: 25px;
+}
+.hint{
+  font-style: italic;
+  color: var(--r-link-color-dark);
+  font-size: 15px;
+  top: -35px;
+  position: relative;
+}
+
+.fragment.glow{-webkit-backface-visibility: hidden;backface-visibility: hidden; transform: translate3d(0,0,0); filter: drop-shadow(0px 0px 20px #23cbfa00);}
+.fragment.glow.current-fragment{filter: drop-shadow(0px 0px 20px #23cafa);}
+
+.fragment.glowfadein{opacity:0; -webkit-backface-visibility: hidden;backface-visibility: hidden; transform: translate3d(0,0,0); filter: drop-shadow(0px 0px 20px #23cbfa00);}
+.fragment.glowfadein.current-fragment{opacity:1; filter: drop-shadow(0px 0px 20px #23cafa);}
+
+
+.definition{
+  font-weight:bold;
+  font-style: normal;
+  position: absolute;
+  top: -23px;
+  left: 50px;
+  color: var(--r-quote-color);
+  background-color: var(--r-background-color);   
+  padding-left: 10px;  
+  padding-right: 10px;
+}
+.quote{
+  font-style: italic;
+  border: 2px solid var(--r-quote-color);
+  border-radius: 15px;
+  padding:15px;
+  position: relative;
+}
