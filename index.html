@@ -28,7 +28,16 @@
 					<h4>Seminar: Advanced Topics in Animation</h4>
 					<h4>Julian Karrer</h4>
 				</section>
-				
+
+				<!-- MOTIVATING EXAMPLE -->
+				<section data-auto-animate data-auto-animate-restart>
+					<h4 class="r-fit-text" data-id="header">Why does numerical time integration matter?</h4>
+					<div class="side-by-side" style="font-size: 20px; position: absolute; width: 100%">
+						<span style="color: 	#de58ff">Runge Kutta 4 (Classic)</span>
+						<span style="color: 	#fdb059">Semi-implicit Euler (4 steps)</span>
+					</div>
+					<canvas id="sim" style="width:100%"width="1300" height="800"></canvas>
+				</section>
 
 				<!-- LANDSCAPE  -->
 				<section data-auto-animate data-auto-animate-restart>
@@ -404,6 +413,7 @@
 			});
 		</script>
 		<script src="plot_errors.js"></script>
+		<script src="sim.js"></script>
 		<script src="landscape.js"></script>
 		<script src="plot_planets.js"></script>
 		<script src="taylor.js"></script>
