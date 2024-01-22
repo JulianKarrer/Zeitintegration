@@ -1,7 +1,7 @@
 
 
 const populate_landscape = ()=>{
-  for (ctx of [domelem("landscape").getContext("2d"), domelem("landscape2").getContext("2d")]){
+  for (ctx of [domelem("landscape").getContext("2d"), domelem("landscape2").getContext("2d"), domelem("landscape3").getContext("2d")]){
     const renderLandscape = ()=>{
       clear(ctx)
 

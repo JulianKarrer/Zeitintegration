@@ -3,7 +3,6 @@ const sim_h = 800
 const sim_w = 1300
 const bxs = 200
 const particle_mass = 1
-const spring_stiffness = 800//80
 const damping = 0.95
 const new_list = ()=>[[0,0], [0,0],[0,0],[0,0]]
 const new_pos = (offx) => [
@@ -13,13 +12,19 @@ const new_pos = (offx) => [
   [offx+bxs/2,sim_h/4-bxs/2], 
   [offx-bxs/2,sim_h/4-bxs/2], 
 ]
-const pos1 = new_pos(sim_w/4)
-const vel1 = new_list()
-const acc1 = new_list()
 
-const pos2 = new_pos(3*sim_w/4)
-const vel2 = new_list()
-const acc2 = new_list()
+const init = ()=>{
+  spring_stiffness = domelem("sim-k-toggle").checked ? 800:80
+  pos1 = new_pos(sim_w/4)
+  vel1 = new_list()
+  acc1 = new_list()
+  pos2 = new_pos(3*sim_w/4)
+  vel2 = new_list()
+  acc2 = new_list()
+}
+let spring_stiffness, pos1, vel1, acc1, pos2, vel2, acc2
+init()
+let sim_active = false
 
 // define the rest length of springs
 const rest_length = (i,j) => {
@@ -31,7 +36,7 @@ const rest_length = (i,j) => {
   }
 }
 
-const draw_sim = (time) => {
+const draw_sim = () => {
   // compute dt
   const dt = 0.16 //2/spring_stiffness*2.0
   // compute forces
@@ -174,15 +179,18 @@ const draw_sim = (time) => {
   }
 
   // execute timestep
-    // rk4
-  rk4(pos1, vel1, acc1, dt)
-  enforce_boundary_conditions(pos1, vel1, acc1)
-  draw_pos(pos1, "#de58ff")
-    // semi euler
-  for (let i=0; i<4; i++){
-    semi_euler(pos2, vel2, acc2, dt/4)
-    enforce_boundary_conditions(pos2, vel2, acc2)
+  if(sim_active){
+      // rk4
+    rk4(pos1, vel1, acc1, dt)
+    enforce_boundary_conditions(pos1, vel1, acc1)
+      // semi euler
+    for (let i=0; i<4; i++){
+      semi_euler(pos2, vel2, acc2, dt/4)
+      enforce_boundary_conditions(pos2, vel2, acc2)
+    }
   }
+  // draw
+  draw_pos(pos1, "#de58ff")
   draw_pos(pos2, "#fdb059")
 
   // draw floor and prepare next frame
@@ -191,3 +199,4 @@ const draw_sim = (time) => {
   requestAnimationFrame(draw_sim)
 }
 setTimeout(()=>{requestAnimationFrame(draw_sim)}, 100)
+domelem("sim").addEventListener("click", ()=>{init(); sim_active=true;})

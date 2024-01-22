@@ -1,5 +1,6 @@
 const euler_tangent_t = (t, offy) => (x) => euler_fn(t) + euler_fn_deriv(t)*(x-t) - offy
 
+let rk2_state = 0
 const draw_rk2 = (time) => {
   const ctx = domelem("rk2").getContext("2d")
   const width = ctx.canvas.width
@@ -46,15 +47,14 @@ const draw_rk2 = (time) => {
   ctx.font = "30px Quicksand";
   let font_colour = HTML_COLOURS.rk2
   let fn_colour = HTML_COLOURS.rk2
-  let step = Math.floor(time/3000)%3
   let slope = euler_tangent_t(1.5, 0.45)(2)-euler_tangent_t(1.5, 0.45)(1)
   let final_est = (x)=>slope*(x-1)+euler_fn(1)
-  if (step===0){
+  if (rk2_state===0){
     plotFunction(ctx, euler_tangent_xt_1, domain, fn_colour+"ff", 2)
     dot_label(1.5, euler_fn(1.5)-0.45, "",   "white", true , 3)
     ctx.fillStyle = font_colour
     ctx.fillText("1. half Euler step",  width/20,  height/4)
-  } else if (step===1){
+  } else if (rk2_state===1){
     plotFunction(ctx, euler_tangent_t(1.5, 0.45), domain, fn_colour+"ff", 2)
     ctx.fillStyle = font_colour
     ctx.fillText("2. get v(t+0.5h)",  width/20,  height/4)
@@ -117,3 +117,4 @@ const draw_rk2 = (time) => {
   requestAnimationFrame(draw_rk2)
 }
 setTimeout(draw_rk2, 100)
+domelem("rk2").addEventListener("click", ()=>{rk2_state = (rk2_state+1)%3})

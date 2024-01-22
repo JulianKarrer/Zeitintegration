@@ -11,6 +11,7 @@
 		<link rel="stylesheet" href="index.css">
 	</head>
 	<body>
+		<script type="text/javascript" src="GlslCanvas.js"></script>
 		<div class="reveal">
 			<div class="slides">
 				<section>
@@ -36,13 +37,40 @@
 						<span style="color: 	#de58ff">Runge Kutta 4 (Classic)</span>
 						<span style="color: 	#fdb059">Semi-implicit Euler (4 steps)</span>
 					</div>
+					<label class="switch">
+						<span style="position: absolute;top: 3px;left: -56px;">k=80</span>
+						<span style="position: absolute;top: 3px;left: 68px;">k=800</span>
+						<input type="checkbox" id="sim-k-toggle">
+						<span class="slider round"></span>
+					</label>
 					<canvas id="sim" style="width:100%"width="1300" height="800"></canvas>
 				</section>
-
 				<!-- LANDSCAPE  -->
-				<section data-auto-animate data-auto-animate-restart>
+				<section data-auto-animate>
 					<h4 class="r-fit-text" data-id="header">The Landscape of Integration Methods</h4>
 					<canvas id="landscape" style="width:100%"width="1300" height="800" onclick="()=>{}"></canvas>
+				</section>
+				<!-- OUTLINE -->
+				<section  data-auto-animate>
+					<h4 data-id="header" style="font-size: 70px;">Outline</h4>
+					<ul>
+						<li class="fragment custom glow">Motivation</li>
+						<li class="fragment custom glow">Problem Statement and Solution</li>
+						<li class="fragment custom glow">
+							Explicit Methods
+							<ul>
+								<li class="fragment custom glow">Linear Multistep</li>
+								<li class="fragment custom glow">Runge Kutta</li>
+								<li class="fragment custom glow">Accuracy and Error Order</li>
+							</ul>
+						</li>
+						<li class="fragment custom glow">
+							Implicit Methods
+							<ul>
+								<li class="fragment custom glow">Stiffness and Stability</li>
+							</ul>
+						</li>
+					</ul>
 				</section>
 
 
@@ -51,29 +79,30 @@
 					<h4 class="r-fit-text" data-id="header">What is a Taylor expansion?</h4>
 					<canvas id="taylor" width="1000" height="500" onclick="()=>{}"></canvas>
 					<div data-id="taylorseries">
-						<span class="math">\[f(x)\approx f(0) + \frac{f'(0)}{1!}x + \frac{f''(0)}{2!}x^2  + \frac{f'''(0)}{3!}x^3 + \dots\]</span>
+						<span class="math">\[\bm{f}(t+h) = \bm{f}(t) + h\frac{\bm{f}'(t)}{1!} + h^2\frac{\bm{f}''(t)}{2!} + h^3\frac{\bm{f}^{(3)}(t)}{3!} + \dots + h^k\frac{\bm{f}^{(k)}(t)}{k!} + \mathcal{O}(h^{k+1})\]</span>
 					</div>
 				</section>
 				<section  data-auto-animate>
 					<h4 class="r-fit-text" data-id="header">Taylor Series: Implicit Assumptions</h4>
 					<ul>
 						<li>Taylor series is a power series $f(x)\approx \sum_{n=0}^\infty a_n x^n$</li>
-						<li class="fragment">Unlike the Fourier Series, it fails at discontinuities</li>
-						<li class="fragment">n-th order Taylor approximation assumes $C_n$ continuity</li>
+						<li>is exact for analytic ($\subsetneq C^\infty$, smooth) functions</li>
+						<li>unlike Fourier Series for periodic $\bm{f}$, it fails at discontinuities</li>
+						<li>n-th order Taylor approximation assumes $C_n$ continuity</li>
 					</ul>
 					<div data-id="taylorseries">
-						<span class="math permaglow">\[f(x)\approx f(0) + \frac{f'(0)}{1!}x + \frac{f''(0)}{2!}x^2  + \frac{f'''(0)}{3!}x^3 + \dots\]</span>
+						<span class="math permaglow">\[\bm{f}(t+h) = \bm{f}(t) + h\frac{\bm{f}'(t)}{1!} + h^2\frac{\bm{f}''(t)}{2!} + h^3\frac{\bm{f}^{(3)}(t)}{3!} + \dots + h^k\frac{\bm{f}^{(k)}(t)}{k!} + \mathcal{O}(h^{k+1})\]</span>
 					</div>
 				</section>
 				<section  data-auto-animate>
 					<h4 class="r-fit-text" data-id="header">Taylor Series: approximating positions</h4>
 					<div data-id="taylorseries">
-						<span class="math fragment custom glow">\[f(x)\approx f(0) + \frac{f'(0)}{1!}x + \frac{f''(0)}{2!}x^2  + \frac{f'''(0)}{3!}x^3 + \dots\]</span>
+						<span class="math fragment custom glow">\[\bm{f}(t+h) = \bm{f}(t) + h\frac{\bm{f}'(t)}{1!} + h^2\frac{\bm{f}''(t)}{2!} + h^3\frac{\bm{f}^{(3)}(t)}{3!} + \dots + h^k\frac{\bm{f}^{(k)}(t)}{k!} + \mathcal{O}(h^{k+1})\]</span>
 					</div>
 					<div data-id="taylorpos">
 						Plug in $\boldsymbol{x}({t+h})$ as a function $f$: 
-						<span class="math fragment custom glowfadein">\[\boldsymbol{x}({t+h})\approx \boldsymbol{x}(t) + h \frac{d\boldsymbol{x}(t)}{dt} + \frac{h^2}{2}\frac{d^2\boldsymbol{x}(t)}{dt^2}  + \frac{h^3}{6}\frac{d^3\boldsymbol{x}(t)}{dt^3} + \mathcal{O}(h^4)\]</span>
-						<span class="math fragment custom glowfadein">or in other notation: \[\boldsymbol{x}^{t+h}\approx \boldsymbol{x}^t + h \boldsymbol{v}^t + \frac{h^2}{2}\boldsymbol{a}^t  + \frac{h^3}{6}\frac{d^3\boldsymbol{x}(t)}{dt^3} + \mathcal{O}(h^4)\]</span>
+						<span class="math fragment custom glowfadein">\[\boldsymbol{x}({t+h}) = \boldsymbol{x}(t) + h \frac{d\boldsymbol{x}(t)}{dt} + \frac{h^2}{2}\frac{d^2\boldsymbol{x}(t)}{dt^2}  + \frac{h^3}{6}\frac{d^3\boldsymbol{x}(t)}{dt^3} + \mathcal{O}(h^4)\]</span>
+						<span class="math fragment custom glowfadein">or in other notation: \[\boldsymbol{x}^{t+h} = \boldsymbol{x}^t + h \boldsymbol{v}^t + \frac{h^2}{2}\boldsymbol{a}^t  + \frac{h^3}{6}\frac{d^3\boldsymbol{x}(t)}{dt^3} + \mathcal{O}(h^4)\]</span>
 						<span class="fragment r-fit-text">$\Longrightarrow$ more information/points → higher order derivatives → higher accuracy</span><br/>
 					</div>
 				</section>
@@ -86,11 +115,11 @@
 						<div style="flex-direction: column; display: flex; align-items: center; justify-content: center;">
 							<span class="r-fit-text">First order approximations:</span>
 							<div class="fragment custom glow">
-								<span class="math">\[\boldsymbol{x}^{t+h}\approx \boldsymbol{x}^t + h \boldsymbol{v}^t + \mathcal{O}(h^2)\]</span>
+								<span class="math">\[\boldsymbol{x}^{t+h} =  \boldsymbol{x}^t + h \boldsymbol{v}^t + \mathcal{O}(h^2)\]</span>
 								<span class="hint" style="color: #ff4a5d">Explicit Euler, Forward Euler, Forward Difference</span>
 							</div>
 							<div class="fragment custom glow">
-								<span class="math">\[\boldsymbol{x}^{t+h}\approx \boldsymbol{x}^t + h\boldsymbol{v}^{t+h} + \mathcal{O}(h^2)\]</span>
+								<span class="math">\[\boldsymbol{x}^{t+h} =  \boldsymbol{x}^t + h\boldsymbol{v}^{t+h} + \mathcal{O}(h^2)\]</span>
 								<span class="hint" style="color: #c1ff9a">Implicit Euler, Backward Euler, Backward Difference</span>
 							</div>
 						</div>
@@ -108,8 +137,8 @@
 					</ul>
 					<div data-id="verletderivation" class="fragment math">
 						\[\begin{align*}
-						\boldsymbol{x}^{t+h}&\approx \boldsymbol{x}^t &+ h \boldsymbol{v}^t &+ \frac{h^2}{2}\boldsymbol{a}^t  &+ \frac{h^3}{6}\frac{d^3\boldsymbol{x}(t)}{dt^3} &+ \mathcal{O}(h^4)\\
-						\boldsymbol{x}^{t-h}&\approx \boldsymbol{x}^t &- h \boldsymbol{v}^t &+ \frac{h^2}{2}\boldsymbol{a}^t  &- \frac{h^3}{6}\frac{d^3\boldsymbol{x}(t)}{dt^3} &+ \mathcal{O}(h^4)\\
+						\boldsymbol{x}^{t+h}&= \boldsymbol{x}^t &+ h \boldsymbol{v}^t &+ \frac{h^2}{2}\boldsymbol{a}^t  &+ \frac{h^3}{6}\frac{d^3\boldsymbol{x}(t)}{dt^3} &+ \mathcal{O}(h^4)\\
+						\boldsymbol{x}^{t-h}&= \boldsymbol{x}^t &- h \boldsymbol{v}^t &+ \frac{h^2}{2}\boldsymbol{a}^t  &- \frac{h^3}{6}\frac{d^3\boldsymbol{x}(t)}{dt^3} &+ \mathcal{O}(h^4)\\
 						\end{align*}
 						\]
 					</div>
@@ -118,14 +147,14 @@
 					<h4 class="r-fit-text" data-id="header">Making Explicit Euler more accurate: Verlet</h4>
 					<div data-id="verletderivation" class="math">
 						\[\begin{align*}
-						\boldsymbol{x}^{t+h}&\approx \boldsymbol{x}^t &+ h \boldsymbol{v}^t &+ \frac{h^2}{2}\boldsymbol{a}^t  &+ \frac{h^3}{6}\frac{d^3\boldsymbol{x}(t)}{dt^3} &+ \mathcal{O}(h^4)\\
-						\boldsymbol{x}^{t-h}&\approx \boldsymbol{x}^t &- h \boldsymbol{v}^t &+ \frac{h^2}{2}\boldsymbol{a}^t  &- \frac{h^3}{6}\frac{d^3\boldsymbol{x}(t)}{dt^3} &+ \mathcal{O}(h^4)\\
-						\boldsymbol{x}^{t+h} + \boldsymbol{x}^{t-h}&\approx 2 \boldsymbol{x}^t &&+ h^2\boldsymbol{a}^t &&+ \mathcal{O}(h^4)\\
+						\boldsymbol{x}^{t+h}&= \boldsymbol{x}^t &+ h \boldsymbol{v}^t &+ \frac{h^2}{2}\boldsymbol{a}^t  &+ \frac{h^3}{6}\frac{d^3\boldsymbol{x}(t)}{dt^3} &+ \mathcal{O}(h^4)\\
+						\boldsymbol{x}^{t-h}&= \boldsymbol{x}^t &- h \boldsymbol{v}^t &+ \frac{h^2}{2}\boldsymbol{a}^t  &- \frac{h^3}{6}\frac{d^3\boldsymbol{x}(t)}{dt^3} &+ \mathcal{O}(h^4)\\
+						\boldsymbol{x}^{t+h} + \boldsymbol{x}^{t-h}&= 2 \boldsymbol{x}^t &&+ h^2\boldsymbol{a}^t &&+ \mathcal{O}(h^4)\\
 						\end{align*}
 						\]
 					</div>
 					<div class="fragment custom glowfadein" data-id="verlet-definition">
-						<span class="math">\[\boldsymbol{x}^{t+h} \approx  2 \boldsymbol{x}^t - \boldsymbol{x}^{t-h} + h^2\boldsymbol{a}^t + \mathcal{O}(h^4)\]</span>
+						<span class="math">\[\boldsymbol{x}^{t+h} =  2 \boldsymbol{x}^t - \boldsymbol{x}^{t-h} + h^2\boldsymbol{a}^t + \mathcal{O}(h^4)\]</span>
 						<span class="hint" style="color: #5cb8ff">Verlet</span>
 					</div>
 					<span class="fragment">directly solves 2nd order ODE without using $\boldsymbol{v}^t$ </span>
@@ -135,23 +164,23 @@
 					<h4 class="r-fit-text" data-id="header">explicit linear multistep methods</h4>
 					<span class="r-fit-text">linear multistep methods $\Longleftrightarrow$ linear combination of values at previous points</span>
 					<div data-id="verlet-definition">
-						<span class="math">\[\boldsymbol{x}^{t+h} \approx 2 \boldsymbol{x}^t -\boldsymbol{x}^{t-h}  + h^2\boldsymbol{a}^t + \mathcal{O}(h^4)\]</span>
+						<span class="math">\[\boldsymbol{x}^{t+h} = 2 \boldsymbol{x}^t -\boldsymbol{x}^{t-h}  + h^2\boldsymbol{a}^t + \mathcal{O}(h^4)\]</span>
 						<span class="hint" style="color: #5cb8ff">Verlet</span>
 					</div>
 					<div class="fragment fade-in" style="margin-bottom: -30px;">
-						<span class="math">\[\boldsymbol{x}^{t+h} \approx 
+						<span class="math">\[\boldsymbol{x}^{t+h} = 
 							\boldsymbol{x}^{t} + \frac{h}{2}\left( 3\boldsymbol{v}^{t} - \boldsymbol{v}^{t-h} \right)
 							+ \mathcal{O}(h^3)\]</span>
 						<span class="hint" style="color: #ff5960">2nd Order Adams–Bashforth</span>
 					</div>
 					<div class="fragment fade-in" style="margin-bottom: -30px;">
-						<span class="math">\[\boldsymbol{x}^{t+h} \approx 
+						<span class="math">\[\boldsymbol{x}^{t+h} = 
 							\boldsymbol{x}^{t} + \frac{h}{12}\left( 23\boldsymbol{v}^{t} -16\boldsymbol{v}^{t-h} +5\boldsymbol{v}^{t-2h}\right)
 							+ \mathcal{O}(h^4)\]</span>
 						<span class="hint" style="color: #ff6762">3rd Order Adams–Bashforth</span>
 					</div>
 					<div class="fragment fade-in" style="margin-bottom: -30px;">
-						<span class="math">\[\boldsymbol{x}^{t+h} \approx 
+						<span class="math">\[\boldsymbol{x}^{t+h} = 
 							\boldsymbol{x}^{t} + \frac{h}{24}\left( 55\boldsymbol{v}^{t} -59\boldsymbol{v}^{t-h} +37\boldsymbol{v}^{t-2h} -9\boldsymbol{v}^{t-3h}\right)
 							+ \mathcal{O}(h^5)\]</span>
 						<span class="hint" style="color: #ff8366">4th Order Adams–Bashforth</span>
@@ -172,18 +201,23 @@
 					</div>
 					<canvas id="planets1" width="700" height="700" style="top: -60px; position: relative;" onclick="()=>{}"></canvas>
 				</section>
+				<!-- LANDSCAPE AGAIN -->
+				<section data-auto-animate>
+					<h4 class="r-fit-text" data-id="header">The Landscape of Integration Methods</h4>
+					<canvas id="landscape3" style="width:100%"width="1300" height="800" onclick="()=>{}"></canvas>
+				</section>
 				<!-- RUNGE KUTTA -->
 				<section data-auto-animate>
 					<h4 class="r-fit-text" data-id="header">improving accuracy: Runge Kutta Methods</h4>
 					<ul>
-						<li><span>linear multistep: use previous timesteps $\approx$ higher order terms</span></li>
+						<li><span>linear multistep: use previous timesteps $=$ higher order terms</span></li>
 						<li><span>new idea: take intermediary steps</span></li>
 					</ul>
 					<div style="display: flex; top:-20px; position: relative;" class="fragment custom glowfadein">
 						<div style="flex-direction: column; display: flex; align-items: center; justify-content: center;">
 							<!-- <span class="r-fit-text">Explicit Midpoint (2nd order Runge Kutta):</span> -->
 							<div >
-								<span class="math">\[\boldsymbol{x}^{t+h}\approx \boldsymbol{x}^t + h\boldsymbol{v}^{t+h} + \mathcal{O}(h^2)\]</span>
+								<span class="math">\[\boldsymbol{x}^{t+h}= \boldsymbol{x}^t + h\boldsymbol{v}(\boldsymbol{x}^{t}+\frac{h}{2}\boldsymbol{v}^t) + \mathcal{O}(h^3)\]</span>
 								<span class="hint" style="color: #ffc6ff">Explicit Midpoint, 2nd Order Runge Kutta, RK2</span>
 							</div>
 						</div>
@@ -191,67 +225,10 @@
 					</div>
 					<div class="fragment"></div>
 				</section>
-				<!-- BACK TO THE LANDSCAPE -->
-				<section data-auto-animate data-auto-animate-restart>
-					<h4 class="r-fit-text" data-id="header">The Landscape of Integration Methods</h4>
-					<canvas id="landscape2" style="width:100%"width="1300" height="800" onclick="()=>{}"></canvas>
-				</section>
-
-
-
-
-
-
-
-
-
-
-				<!-- EULER METHODS AND IMPLICIT METHODS  -->
-				<section  data-auto-animate data-auto-animate-restart>
-					<h4 class="r-fit-text" data-id="header">The simplest case: Euler methods</h4>
-					<div style="display: flex;">
-						<div style="flex-direction: column; display: flex; align-items: center; justify-content: center;">
-							<span class="r-fit-text">First order approximations:</span>
-							<div>
-								<span class="math">\[\boldsymbol{x}^{t+h}\approx \boldsymbol{x}^t + h \boldsymbol{v}^t + \mathcal{O}(h^2)\]</span>
-								<span class="hint" style="color: #ff4a5d">Explicit Euler, Forward Euler, Forward Difference</span>
-							</div>
-							<div>
-								<span class="math">\[\boldsymbol{x}^{t+h}\approx \boldsymbol{x}^t + h\boldsymbol{v}^{t+h} + \mathcal{O}(h^2)\]</span>
-								<span class="hint" style="color: #c1ff9a">Implicit Euler, Backward Euler, Backward Difference</span>
-							</div>
-						</div>
-						<canvas id="eulermethod2" style="width: 60vh; height: 60vh; margin: 5vh;"width="600" height="600"></canvas>
-					</div>
-				</section>
-				<section  data-auto-animate>
-					<h4 class="r-fit-text" data-id="header">the problem with implicit methods</h4>
-					<ul>
-						<li>if $\boldsymbol{v}$ is only a function in time, things are not interacting</li>
-						<li>usually, $\boldsymbol{v}$ and $\boldsymbol{a}$ are functions of position $\boldsymbol{x}(t)$</li>
-						<li class="fragment" data-id="eq">$\boldsymbol{x}({t+h})$ on both sides: 
-							<div data-id="eq">\[\color{red}\boldsymbol{x}({t+h})\color{white} \approx \boldsymbol{x}(t) + h\boldsymbol{v}(\color{red}\boldsymbol{x}({t+h})\color{white})\]</div>
-						</li>
-						<li class="fragment custom glowfadein">implicit methods generally yield a non-linear equation we need to solve </li>
-					</ul>
-				</section>
-				<section data-auto-animate>
-					<h4 class="r-fit-text" data-id="header">Implicit Methods - solving the equation</h4>
-					<div data-id="eq">\[\boldsymbol{x}^{t+h} = \boldsymbol{x}^t + h\boldsymbol{v}(\boldsymbol{x}^{t+h})\]</div>
-					<span class="fragment custom glowfadein">$\Longrightarrow$ Newton-Rhapson methods: 
-						\[0 = \boldsymbol{x}^t + h\boldsymbol{v}(\boldsymbol{x}^{t+h}) - \boldsymbol{x}^{t+h}\]</span>
-					<span class="fragment custom glowfadein">$\Longrightarrow$ Linearization with Jacobian: 
-							\[\boldsymbol{x}^{t+h} = \boldsymbol{x}(t) + h\left( \boldsymbol{v}^t + \boldsymbol{J}^t h \boldsymbol{x}^{t+h} \right)\]</span>
-					<ul>
-						<li class="fragment">more work: solve an equation for each timestep</li>
-						<li class="fragment">more error: linearization and solver inaccuracy</li>
-						<li class="fragment">BUT: they can be unconditionally stable and handle stiff problems</li>
-					</ul>
-				</section>
-
+				
 				<!-- WHAT IS STABILITY -->
 				<section  data-auto-animate data-auto-animate-restart>
-					<h4 class="r-fit-text" data-id="header">What are stability and accuracy?</h4>
+					<h4 class="r-fit-text" data-id="header">Is more always better? Accuracy and Error Order</h4>
 					<h4></h4>
 					<script>
 					const error_show_functions = new Map([
@@ -315,6 +292,58 @@
 						</div>
 						<div class="fragment"></div>
 					</section>
+				<!-- BACK TO THE LANDSCAPE -->
+				<section data-auto-animate data-auto-animate-restart>
+					<h4 class="r-fit-text" data-id="header">The Landscape of Integration Methods</h4>
+					<canvas id="landscape2" style="width:100%"width="1300" height="800" onclick="()=>{}"></canvas>
+				</section>
+
+
+
+
+
+				<!-- EULER METHODS AND IMPLICIT METHODS  -->
+				<section  data-auto-animate data-auto-animate-restart>
+					<h4 class="r-fit-text" data-id="header">The simplest case: Euler methods</h4>
+					<div style="display: flex;">
+						<div style="flex-direction: column; display: flex; align-items: center; justify-content: center;">
+							<span class="r-fit-text">First order approximations:</span>
+							<div>
+								<span class="math">\[\boldsymbol{x}^{t+h}= \boldsymbol{x}^t + h \boldsymbol{v}^t + \mathcal{O}(h^2)\]</span>
+								<span class="hint" style="color: #ff4a5d">Explicit Euler, Forward Euler, Forward Difference</span>
+							</div>
+							<div>
+								<span class="math">\[\boldsymbol{x}^{t+h}= \boldsymbol{x}^t + h\boldsymbol{v}^{t+h} + \mathcal{O}(h^2)\]</span>
+								<span class="hint" style="color: #c1ff9a">Implicit Euler, Backward Euler, Backward Difference</span>
+							</div>
+						</div>
+						<canvas id="eulermethod2" style="width: 60vh; height: 60vh; margin: 5vh;"width="600" height="600"></canvas>
+					</div>
+				</section>
+				<section  data-auto-animate>
+					<h4 class="r-fit-text" data-id="header">the problem with implicit methods</h4>
+					<ul>
+						<li>if $\boldsymbol{v}$ is only a function in time, things are not interacting</li>
+						<li>usually, $\boldsymbol{v}$ and $\boldsymbol{a}$ are functions of position $\boldsymbol{x}(t)$</li>
+						<li class="fragment" data-id="eq">$\boldsymbol{x}({t+h})$ on both sides: 
+							<div data-id="eq">\[\color{red}\boldsymbol{x}({t+h})\color{white} = \boldsymbol{x}(t) + h\boldsymbol{v}(\color{red}\boldsymbol{x}({t+h})\color{white})\]</div>
+						</li>
+						<li class="fragment custom glowfadein">implicit methods generally yield a non-linear equation we need to solve </li>
+					</ul>
+				</section>
+				<section data-auto-animate>
+					<h4 class="r-fit-text" data-id="header">Implicit Methods - solving the equation</h4>
+					<div data-id="eq">\[\boldsymbol{x}^{t+h} = \boldsymbol{x}^t + h\boldsymbol{v}(\boldsymbol{x}^{t+h})\]</div>
+					<span class="fragment custom glowfadein">$\Longrightarrow$ Newton-Rhapson methods: 
+						\[0 = \boldsymbol{x}^t + h\boldsymbol{v}(\boldsymbol{x}^{t+h}) - \boldsymbol{x}^{t+h}\]</span>
+					<span class="fragment custom glowfadein">$\Longrightarrow$ Linearization with Jacobian: 
+							\[\boldsymbol{x}^{t+h} = \boldsymbol{x}(t) + h\left( \boldsymbol{v}^t + \boldsymbol{J}^t h \boldsymbol{x}^{t+h} \right)\]</span>
+					<ul>
+						<li class="fragment">more work: solve an equation for each timestep</li>
+						<li class="fragment">more error: linearization and solver inaccuracy</li>
+						<li class="fragment">BUT: they can be unconditionally stable and handle stiff problems</li>
+					</ul>
+				</section>
 
 					
 				<!-- STIFFNESS  -->
@@ -364,6 +393,30 @@
 							<label id="stiffness-k-label" for="stiffness-k">k</label>
 						</div>
 					</div>
+				</section>
+				<section data-auto-animate>
+					<h4 class="r-fit-text" data-id="header">Region of absolute Stability</h4><br/>
+					<script>
+						let stability_selection = 2;
+						let draw_abs_stability = ()=>{}
+					</script>
+					<div class="side-by-side" style="font-size: 20px;">
+						<a style="color:#c1ff9a; cursor: pointer;" onclick="stability_selection=0; draw_abs_stability();">Implicit Euler</a>
+						<a style="color:#f3e22e; cursor: pointer;" onclick="stability_selection=1; draw_abs_stability();">Trapezoidal Rule</a>
+						<a style="color:#ff4a5d; cursor: pointer;" onclick="stability_selection=2; draw_abs_stability();">Explicit Euler (RK1)</a>
+						<a style="color:#ffc6ff; cursor: pointer;" onclick="stability_selection=3; draw_abs_stability();">Runge Kutta 2</a>
+						<a style="color:#ef8fff; cursor: pointer;" onclick="stability_selection=4; draw_abs_stability();">Runge Kutta 3</a>
+						<a style="color:#de58ff; cursor: pointer;" onclick="stability_selection=5; draw_abs_stability();">Runge Kutta 4</a>
+					</div><br/>
+					<div style="position: relative;">
+						<canvas id="abs-stab-glsl" class="glslCanvas" width="1000" height="1000" style="height:60vh; top:0; left:50%; position: absolute; transform: translateX(-50%);"></canvas>
+						<canvas id="abs-stability" width="1000" height="1000" style="height:60vh; top:0; left:50%; position: absolute; transform: translateX(-50%); z-index: 2;"></canvas>
+					</div>
+				</section>
+				<section data-auto-animate data-auto-animate-restart>
+					<h4 class="r-fit-text" data-id="header">Thank you for your attention!</h4><br/>
+					<span class="math">Slides can be found online at https://juliankarrer.github.io/Zeitintegration/</span>
+					<img src="qr.svg" style="margin-top: 50px; width:200px;"/>
 				</section>
 
 
@@ -420,5 +473,6 @@
 		<script src="eulermethod.js"></script>
 		<script src="rk2.js"></script>
 		<script src="stiffness.js"></script>
+		<script src="absolute-stability.js"></script>
 	</body>
 </html>
