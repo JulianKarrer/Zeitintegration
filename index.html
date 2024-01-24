@@ -55,7 +55,7 @@
 					<h4 data-id="header" style="font-size: 70px;">Outline</h4>
 					<ul>
 						<li class="fragment custom glow">Motivation</li>
-						<li class="fragment custom glow">Problem Statement and Solution</li>
+						<li class="fragment custom glow">Problem Statement and Approach</li>
 						<li class="fragment custom glow">
 							Explicit Methods
 							<ul>
@@ -73,9 +73,22 @@
 					</ul>
 				</section>
 
-
-				<!-- TAYLOR SERIES  -->
+				
 				<section  data-auto-animate data-auto-animate-restart>
+						<h4 data-id="header" style="font-size: 50px;">Problem Statement</h4>
+						<ul>
+							<li>Given: current acceleration $\bm{a}^t$</li>
+							<li>Wanted: updated position $\bm{x}^{t+h}$</li>
+						</ul>
+						\[\bm{a} = \frac{d^2\bm{x}}{dt^2}\]
+						\[\bm{a} = \frac{d\bm{v}}{dt} \quad \bm{v} = \frac{d\bm{x}}{dt} \]
+						<ul>
+							<li>2nd order ODE $\leftrightarrow$ coupled 1st order ODEs</li>
+							<li>integrate twice w.r.t. time $\leftrightarrow$ solve initial value problem</li>
+						</ul>
+				</section>
+				<!-- TAYLOR SERIES  -->
+				<section  data-auto-animate>
 					<h4 class="r-fit-text" data-id="header">What is a Taylor expansion?</h4>
 					<canvas id="taylor" width="1000" height="500" onclick="()=>{}"></canvas>
 					<div data-id="taylorseries">
@@ -85,7 +98,7 @@
 				<section  data-auto-animate>
 					<h4 class="r-fit-text" data-id="header">Taylor Series: Implicit Assumptions</h4>
 					<ul>
-						<li>Taylor series is a power series $f(x)\approx \sum_{n=0}^\infty a_n x^n$</li>
+						<!-- <li>Taylor series is a power series $f(x)\approx \sum_{n=0}^\infty a_n x^n$</li> -->
 						<li>is exact for analytic ($\subsetneq C^\infty$, smooth) functions</li>
 						<li>unlike Fourier Series for periodic $\bm{f}$, it fails at discontinuities</li>
 						<li>n-th order Taylor approximation assumes $C_n$ continuity</li>
@@ -413,7 +426,21 @@
 						<canvas id="abs-stability" width="1000" height="1000" style="height:60vh; top:0; left:50%; position: absolute; transform: translateX(-50%); z-index: 2;"></canvas>
 					</div>
 				</section>
+
+
 				<section data-auto-animate data-auto-animate-restart>
+					<h4 class="r-fit-text" data-id="header">Summary and key takeaways</h4><br/>
+					<ul>
+						<li class="fragment custom glowfadein">choice of integration scheme matters!</li>
+						<li class="fragment custom glowfadein">intermediary or previous steps $\Longrightarrow$ more accuracy</li>
+						<li class="fragment custom glowfadein">higher order schemes are not always better</li>
+						<li class="fragment custom glowfadein">stiff problems = stability is limiting $\Longrightarrow$ implicit methods</li>
+						<li class="fragment custom glowfadein">implicit schemes require solving equations</li>
+						<li class="fragment custom glowfadein">best method to use depends on the problem</li>
+					</ul>
+					<div class="fragment"></div>
+				</section>
+				<section data-auto-animate>
 					<h4 class="r-fit-text" data-id="header">Thank you for your attention!</h4><br/>
 					<span class="math">Slides can be found online at https://juliankarrer.github.io/Zeitintegration/</span>
 					<img src="qr.svg" style="margin-top: 50px; width:200px;"/>
