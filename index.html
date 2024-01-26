@@ -214,6 +214,15 @@
 					</div>
 					<canvas id="planets1" width="700" height="700" style="top: -60px; position: relative;" onclick="()=>{}"></canvas>
 				</section>
+				<section data-auto-animate>
+					<h4 data-id="header" style="font-size: 50px;">Stability and convergence</h4>
+					<ul>
+						<li class="">zero-stable $\Longleftrightarrow$ correct solution as $h\rightarrow 0$</li>
+						<li class="">stable $\Longleftrightarrow$ previously introduced errors are not amplified</li>
+						<li class="">convergent $\Longrightarrow$ consistent and stable, FDE $\rightarrow$ ODE</li>
+						<li class="">more definitions of stability exist (A-stable, L-stable, $\dots$)</li>
+					</ul>
+				</section>
 				<!-- LANDSCAPE AGAIN -->
 				<section data-auto-animate>
 					<h4 class="r-fit-text" data-id="header">The Landscape of Integration Methods</h4>
@@ -384,7 +393,7 @@
 					<ul>
 						<li>smooth and has low variation</li>
 						<li>still, instabilities occur → stiff problem!</li>
-						<li class="fragment custom glowfadein">a method is A-stable if it can deal with this problem:  \[x^t \rightarrow 0 \text{ as } t \rightarrow \infty \]</li>
+						<li class="fragment custom glowfadein">a method is A-stable if it can deal with this problem:  \[\bm{x}^t \rightarrow 0 \text{ as } t \rightarrow \infty \]</li>
 					</ul>
 				</section>
 				<section data-auto-animate>
