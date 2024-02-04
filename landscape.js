@@ -66,7 +66,7 @@ const populate_landscape = ()=>{
 
       // label axis
       ctx.font = "20px Quicksand";
-      ctx.fillText("Linear Multistep", domspace(0,5)[0]+15, domspace(0,5)[1]-5)
+      ctx.fillText("Multistep", domspace(0,5)[0]+15, domspace(0,5)[1]-5)
       ctx.fillText("Runge Kutta", domspace(0,-5)[0]+15, domspace(0,-5)[1]+15)
       ctx.fillText("Explicit", domspace(8,0)[0]-ctx.measureText("Explicit").width, domspace(8,0)[1]-15)
       ctx.fillText("Implicit", domspace(-8,0)[0], domspace(8,0)[1]-15)

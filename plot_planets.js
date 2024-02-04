@@ -125,6 +125,7 @@ let sketch1 = function(p) {
   } 
 
   p.draw = function() {
+
     // clear
     p.clear()
     p.fill(0,0,0,0);

@@ -10,7 +10,7 @@
 		<link rel="stylesheet" href="plugin/highlight/monokai.css">
 		<link rel="stylesheet" href="index.css">
 	</head>
-	<body>
+	<body><a id="link"></a>
 		<script type="text/javascript" src="GlslCanvas.js"></script>
 		<div class="reveal">
 			<div class="slides">
@@ -59,8 +59,8 @@
 						<li class="fragment custom glow">
 							Explicit Methods
 							<ul>
-								<li class="fragment custom glow">Linear Multistep</li>
-								<li class="fragment custom glow">Runge Kutta</li>
+								<li class="fragment custom glow">Multistep Methods</li>
+								<li class="fragment custom glow">Runge Kutta Methods</li>
 								<li class="fragment custom glow">Accuracy and Error Order</li>
 							</ul>
 						</li>
@@ -172,10 +172,10 @@
 					</div>
 					<span class="fragment">directly solves 2nd order ODE without using $\boldsymbol{v}^t$ </span>
 				</section>
-				<!-- EXPLICIT LINEAR MULTISTEP VERLET DERIVATION -->
+				<!-- EXPLICIT MULTISTEP VERLET DERIVATION -->
 				<section data-auto-animate>
-					<h4 class="r-fit-text" data-id="header">explicit linear multistep methods</h4>
-					<span class="r-fit-text">linear multistep methods $\Longleftrightarrow$ linear combination of values at previous points</span>
+					<h4 class="r-fit-text" data-id="header">explicit multistep methods</h4>
+					<span class="r-fit-text">multistep methods $\Longleftrightarrow$ combination of values at previous points</span>
 					<div data-id="verlet-definition">
 						<span class="math">\[\boldsymbol{x}^{t+h} = 2 \boldsymbol{x}^t -\boldsymbol{x}^{t-h}  + h^2\boldsymbol{a}^t + \mathcal{O}(h^4)\]</span>
 						<span class="hint" style="color: #5cb8ff">Verlet</span>
@@ -217,9 +217,9 @@
 				<section data-auto-animate>
 					<h4 data-id="header" style="font-size: 50px;">Stability and convergence</h4>
 					<ul>
-						<li class="">zero-stable $\Longleftrightarrow$ correct solution as $h\rightarrow 0$</li>
+						<li class="">consistent, zero-stable $\Longleftrightarrow$ correct solution as $h\rightarrow 0$</li>
 						<li class="">stable $\Longleftrightarrow$ previously introduced errors are not amplified</li>
-						<li class="">convergent $\Longrightarrow$ consistent and stable, FDE $\rightarrow$ ODE</li>
+						<li class="">convergent $\Longleftrightarrow$ consistent + stable, FDE $\rightarrow$ ODE</li>
 						<li class="">more definitions of stability exist (A-stable, L-stable, $\dots$)</li>
 					</ul>
 				</section>
@@ -232,7 +232,7 @@
 				<section data-auto-animate>
 					<h4 class="r-fit-text" data-id="header">improving accuracy: Runge Kutta Methods</h4>
 					<ul>
-						<li><span>linear multistep: use previous timesteps $=$ higher order terms</span></li>
+						<li><span>multistep: use previous timesteps $=$ higher order terms</span></li>
 						<li><span>new idea: take intermediary steps</span></li>
 					</ul>
 					<div style="display: flex; top:-20px; position: relative;" class="fragment custom glowfadein">
@@ -369,7 +369,7 @@
 
 					
 				<!-- STIFFNESS  -->
-				<section data-auto-animate data-auto-animate-restart>
+				<!-- <section data-auto-animate data-auto-animate-restart>
 					<h4 class="r-fit-text" data-id="header">The core problem - stiffness and stability</h4><br/>
 					<br/>
 					<div class="quote">
@@ -382,10 +382,10 @@
 						<ul>
 							<li class="fragment">stiff problem = timestep is limited by stability, not accuracy</li>
 							<li class="fragment">→ low variation and high smoothness, but small timestep required</li>
-							<!-- <li class="fragment">hard to mathematically define → "phenomenon"</li> -->
+							--><!-- <li class="fragment">hard to mathematically define → "phenomenon"</li> --><!--
 							<li class="fragment">frequently a problem for decaying functions: $e^{kx}$ for $k<0$</li>
 						</ul>
-				</section>
+				</section> -->
 				<section data-auto-animate>
 					<h4 class="r-fit-text" data-id="header">the archetypical stiff problem: A-stability</h4><br/>
 					<span data-id="a_stable_exp">$v^t = -kx^t$</span><br/>
