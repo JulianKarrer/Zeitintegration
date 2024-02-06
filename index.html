@@ -9,6 +9,7 @@
 		<link rel="stylesheet" href="dist/theme/black.css">
 		<link rel="stylesheet" href="plugin/highlight/monokai.css">
 		<link rel="stylesheet" href="index.css">
+		<link rel="icon" type="image/x-icon" href="favicon.ico">
 	</head>
 	<body><a id="link"></a>
 		<script type="text/javascript" src="GlslCanvas.js"></script>
@@ -92,7 +93,7 @@
 					<h4 class="r-fit-text" data-id="header">What is a Taylor expansion?</h4>
 					<canvas id="taylor" width="1000" height="500" onclick="()=>{}"></canvas>
 					<div data-id="taylorseries">
-						<span class="math">\[\bm{f}(t+h) = \bm{f}(t) + h\frac{\bm{f}'(t)}{1!} + h^2\frac{\bm{f}''(t)}{2!} + h^3\frac{\bm{f}^{(3)}(t)}{3!} + \dots + h^k\frac{\bm{f}^{(k)}(t)}{k!} + \mathcal{O}(h^{k+1})\]</span>
+						<span class="math">\[\bm{f}(t+h) = \bm{f}(t) + h\frac{\bm{f}'(t)}{1!} + h^2\frac{\bm{f}''(t)}{2!} + h^3\frac{\bm{f}^{(3)}(t)}{3!} + \dots + h^n\frac{\bm{f}^{(n)}(t)}{n!} + \mathcal{O}(h^{n+1})\]</span>
 					</div>
 				</section>
 				<section  data-auto-animate>
@@ -104,13 +105,13 @@
 						<li>n-th order Taylor approximation assumes $C_n$ continuity</li>
 					</ul>
 					<div data-id="taylorseries">
-						<span class="math permaglow">\[\bm{f}(t+h) = \bm{f}(t) + h\frac{\bm{f}'(t)}{1!} + h^2\frac{\bm{f}''(t)}{2!} + h^3\frac{\bm{f}^{(3)}(t)}{3!} + \dots + h^k\frac{\bm{f}^{(k)}(t)}{k!} + \mathcal{O}(h^{k+1})\]</span>
+						<span class="math permaglow">\[\bm{f}(t+h) = \bm{f}(t) + h\frac{\bm{f}'(t)}{1!} + h^2\frac{\bm{f}''(t)}{2!} + h^3\frac{\bm{f}^{(3)}(t)}{3!} + \dots + h^{n}\frac{\bm{f}^{(n)}(t)}{n!} + \mathcal{O}(h^{n+1})\]</span>
 					</div>
 				</section>
 				<section  data-auto-animate>
 					<h4 class="r-fit-text" data-id="header">Taylor Series: approximating positions</h4>
 					<div data-id="taylorseries">
-						<span class="math fragment custom glow">\[\bm{f}(t+h) = \bm{f}(t) + h\frac{\bm{f}'(t)}{1!} + h^2\frac{\bm{f}''(t)}{2!} + h^3\frac{\bm{f}^{(3)}(t)}{3!} + \dots + h^k\frac{\bm{f}^{(k)}(t)}{k!} + \mathcal{O}(h^{k+1})\]</span>
+						<span class="math fragment custom glow">\[\bm{f}(t+h) = \bm{f}(t) + h\frac{\bm{f}'(t)}{1!} + h^2\frac{\bm{f}''(t)}{2!} + h^3\frac{\bm{f}^{(3)}(t)}{3!} + \dots + h^n\frac{\bm{f}^{(n)}(t)}{n!} + \mathcal{O}(h^{n+1})\]</span>
 					</div>
 					<div data-id="taylorpos">
 						Plug in $\boldsymbol{x}({t+h})$ as a function $f$: 
@@ -134,6 +135,13 @@
 							<div class="fragment custom glow">
 								<span class="math">\[\boldsymbol{x}^{t+h} =  \boldsymbol{x}^t + h\boldsymbol{v}^{t+h} + \mathcal{O}(h^2)\]</span>
 								<span class="hint" style="color: #c1ff9a">Implicit Euler, Backward Euler, Backward Difference</span>
+							</div>
+							<div class="fragment custom glow">
+								<span class="math">\[\begin{align*}
+									\boldsymbol{v}^{t+h} &= \boldsymbol{v}^t + h \boldsymbol{a}^t + \mathcal{O}(h^2) \\
+									\boldsymbol{x}^{t+h} &= \boldsymbol{x}^t + h \boldsymbol{v}^{t+h} + \mathcal{O}(h^2) \\
+							 \end{align*}\]</span>
+								<span class="hint" style="color: #fdb059">Semi-implicit Euler, Symplectic Euler, Euler-Cromer</span>
 							</div>
 						</div>
 						<div class="fragment"></div>

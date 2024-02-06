@@ -53,15 +53,15 @@ const draw_rk2 = (time) => {
     plotFunction(ctx, euler_tangent_xt_1, domain, fn_colour+"ff", 2)
     dot_label(1.5, euler_fn(1.5)-0.45, "",   "white", true , 3)
     ctx.fillStyle = font_colour
-    // ctx.fillText("1. half Euler step",  width/20,  height/4)
+    ctx.fillText("1. half Euler step",  width/20,  height/4)
   } else if (rk2_state===1){
     plotFunction(ctx, euler_tangent_t(1.5, 0.45), domain, fn_colour+"ff", 2)
     ctx.fillStyle = font_colour
-    // ctx.fillText("2. get v(t+0.5h)",  width/20,  height/4)
+    ctx.fillText("2. get v(t+0.5h)",  width/20,  height/4)
   } else {
     plotFunction(ctx, final_est, domain, fn_colour+"ff", 2)
     ctx.fillStyle = font_colour
-    // ctx.fillText("3. full Euler step",  width/20,  height/4)
+    ctx.fillText("3. full Euler step",  width/20,  height/4)
   }
   dot_label(2, final_est(2), "",   "white", true , 3)
   dot_label(1.5, euler_fn(1.5)-0.45, "",   "white", true , 3)

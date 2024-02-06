@@ -48,13 +48,13 @@ const draw_euler_method = (time) => {
     plotFunction(ctx, euler_fn, domain, "#ffffff88", 2)
 
     // draw methods
-    if (i==2 || Reveal.getState().indexf === 0 || Reveal.getState().indexf === 2){
+    if (i==2 || Reveal.getState().indexf === 0 || Reveal.getState().indexf >= 2){
       // draw explicit euler
       plotFunction(ctx, euler_tangent_xt_1, domain, HTML_COLOURS.expl_eul+"88", 2)
       dot_label(2, euler_tangent_xt_1(2), "", "white", true, 5)
 
     }  
-    if (i==2 || Reveal.getState().indexf === 1 || Reveal.getState().indexf === 2){
+    if (i==2 || Reveal.getState().indexf === 1 || Reveal.getState().indexf >= 2){
       // draw implicit euler
       let t = Reveal.getState().indexf === 2? 0: Math.max(0, Math.min(1, 2*Math.sin(Math.abs(time)/1000)))
       plotFunction(ctx, euler_tangent_xt_2(t), domain, HTML_COLOURS.impl_eul+"88", 2)
